@@ -1,4 +1,6 @@
+import { signOut } from 'firebase/auth';
 import { navSections } from './../constants/index';
+import { auth } from '../firebase/config';
 
 const Nav = ({ user }) => {
   return (
@@ -30,7 +32,10 @@ const Nav = ({ user }) => {
           </p>
         </div>
 
-        <button className="bg-gray-700 p-2 rounded-lg">
+        <button
+          onClick={() => signOut(auth)}
+          className="bg-gray-700 p-2 rounded-lg"
+        >
           Çıkış Yap
         </button>
       </div>

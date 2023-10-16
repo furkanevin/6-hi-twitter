@@ -18,17 +18,17 @@ const Form = ({ user }) => {
 
   // medyayı storage'a yükler ve url'ini döndürür
   const uploadImage = async (image) => {
-    // tip png veya jpeg eşitse çalışır
-    if (
-      image === undefined ||
-      image.type !== 'image/png' ||
-      image.type !== 'image/jpeg'
-    ) {
-      toast.info('Medya deteklenmiyor');
+    if (!image) {
       return null;
     }
+    // else if (
+    //   image.type !== 'image/png' ||
+    //   image.type !== 'image/jpeg'
+    // ) {
+    //   toast.info('Medya tipi desteklenmiyor');
+    //   return null;
+    // }
 
-    setIsLoading(true);
     // strage'da dosya için yer ayarlama
     const storageRef = ref(storage, `${image.name}${v4()}`);
 
@@ -36,8 +36,6 @@ const Form = ({ user }) => {
     const url = await uploadBytes(storageRef, image)
       // yüklenme bittiğinde url'e erişme
       .then((response) => getDownloadURL(response.ref));
-
-    setIsLoading(false);
 
     // fonksiyonun çağrıldığı yere url'i gönderme
     return url;
@@ -50,14 +48,16 @@ const Form = ({ user }) => {
     const textContent = e.target[0].value;
     const imageContent = e.target[1].files[0];
 
-    // medyayı yükleme
-    const imageUrl = await uploadImage(imageContent);
-
     // todo fotoğrafı'n urlini veritanını ekle
-    if (!textContent && !imageUrl) {
+    if (!textContent && !imageContent) {
       toast.info('Tweet içeriği ekleyin');
       return;
     }
+
+    setIsLoading(true);
+
+    // medyayı yükleme
+    const imageUrl = await uploadImage(imageContent);
 
     // tweet'i kolleksiyona ekleme
     await addDoc(collectionRef, {
@@ -72,6 +72,8 @@ const Form = ({ user }) => {
       likes: [],
       isEdited: false,
     });
+
+    setIsLoading(false);
 
     // formu temizle
     e.target[0].value = '';
