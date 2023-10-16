@@ -19,24 +19,24 @@ const Form = ({ user }) => {
   // medyayı storage'a yükler ve url'ini döndürür
   const uploadImage = async (image) => {
     // tip png veya jpeg eşitse çalışır
-    if (image.type === 'image/png' || image.type === 'image/jpeg') {
-      setIsLoading(true);
-      // strage'da dosya için yer ayarlama
-      const storageRef = ref(storage, `${image.name}${v4()}`);
-
-      // dosyayı yükleme
-      const url = await uploadBytes(storageRef, image)
-        // yüklenme bittiğinde url'e erişme
-        .then((response) => getDownloadURL(response.ref));
-
-      setIsLoading(false);
-
-      // fonksiyonun çağrıldığı yere url'i gönderme
-      return url;
+    if (image.type !== 'image/png' || image.type !== 'image/jpeg') {
+      toast.info('Medya deteklenmiyor');
+      return null;
     }
 
-    toast.info('Medya deteklenmiyor');
-    return null;
+    setIsLoading(true);
+    // strage'da dosya için yer ayarlama
+    const storageRef = ref(storage, `${image.name}${v4()}`);
+
+    // dosyayı yükleme
+    const url = await uploadBytes(storageRef, image)
+      // yüklenme bittiğinde url'e erişme
+      .then((response) => getDownloadURL(response.ref));
+
+    setIsLoading(false);
+
+    // fonksiyonun çağrıldığı yere url'i gönderme
+    return url;
   };
 
   // tweet'i atma
