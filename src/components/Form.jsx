@@ -19,7 +19,11 @@ const Form = ({ user }) => {
   // medyayı storage'a yükler ve url'ini döndürür
   const uploadImage = async (image) => {
     // tip png veya jpeg eşitse çalışır
-    if (image.type !== 'image/png' || image.type !== 'image/jpeg') {
+    if (
+      image === undefined ||
+      image.type !== 'image/png' ||
+      image.type !== 'image/jpeg'
+    ) {
       toast.info('Medya deteklenmiyor');
       return null;
     }
